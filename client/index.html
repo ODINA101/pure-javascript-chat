@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+      <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+  </head>
+  <body>
+<div class="container">
+ 
+
+<div class="row">
+ <div class="input-field col s6">
+ <input type="text" id="newname"  class="validate" placeholder="server name">
+
+ </div>
+<div class="col s6">
+ <button onclick="newroom()" class="waves-effect waves-light btn" style="margin-top:22px;">create server</button>
+</div>
+</div>
+
+
+
+    <h1>Servers:</h1>
+    <div class="servers"></div>
+   </div>
+   </body>
+</html>
+
+<script type="text/javascript">
+  
+
+'use strict';
+
+var socket = io('');
+let room_name = document.querySelector('#newname');
+let servers = document.querySelector('.servers');
+
+
+
+
+socket.on('servers',(data)=>{
+     var html = '';
+    for(let i = 0;i<data.length;i++) {
+        html += "<a href='#' data-name='"+ data[i] +"'  class='collection-item' onclick='render(this)'>" + data[i] + "</a>";
+    }
+    servers.innerHTML = '<div class="collection">' + html +'</div>';
+
+});
+
+const render = (data) => {
+  console.log(data.getAttribute('data-name'));
+  localStorage.setItem("server",data.getAttribute('data-name'));
+  location.href="chat.html";
+
+ 
+    
+}
+
+const newroom = () => {
+
+console.log(room_name.value);
+  if(room_name.value !== null) {
+    socket.emit('newroom',room_name.value);
+  }else{
+    alert('please enter somthing');
+  }
+
+
+room_name.value = null;
+
+}
+
+
+
+
+
+
+</script>
